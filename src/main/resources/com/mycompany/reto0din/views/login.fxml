@@ -58,7 +58,7 @@
             </Label>
             <PasswordField fx:id="txtPassword" promptText="••••••••" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #D1D5DB; -fx-padding: 9;" GridPane.rowIndex="5" />
 
-            <Button fx:id="btnLogin" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #0A47A9; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="Iniciar sesión" GridPane.rowIndex="6">
+            <Button fx:id="btnLogin" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="40.0" style="-fx-background-color: #0A47A9; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="Iniciar sesión" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets top="14.0" />
                </GridPane.margin>
