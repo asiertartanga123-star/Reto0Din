@@ -36,7 +36,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>com.mycompany.reto0din.App</mainClass>
+                    <mainClass>com.mycompany.reto0din.app.App</mainClass>
                 </configuration>
                 <executions>
                     <execution>

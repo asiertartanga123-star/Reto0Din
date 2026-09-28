@@ -3,6 +3,6 @@ module com.mycompany.reto0din {
     requires javafx.fxml;
     requires java.base;
 
-    opens com.mycompany.reto0din to javafx.fxml;
-    exports com.mycompany.reto0din;
+    opens com.mycompany.reto0din.controller to javafx.fxml;
+    exports com.mycompany.reto0din.app;
 }

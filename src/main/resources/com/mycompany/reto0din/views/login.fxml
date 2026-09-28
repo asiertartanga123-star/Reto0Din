@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <!-- GridPane exterior: fondo degradado y tarjeta centrada -->
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom right, #5CE1E6, #0A47A9);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reto0din.IniciarSesionController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom right, #5CE1E6, #0A47A9);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reto0din.controller.IniciarSesionController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
    </columnConstraints>
