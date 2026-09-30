@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reto0din.controller.PrimaryController">
-   <children>
-      <Label text="Panel de administración" />
-      <Button text="Cerrar sesión" onAction="#cerrarSesion" />
-   </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
+<VBox alignment="CENTER" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: linear-gradient(to bottom right, #5CE1E6, #0A47A9);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reto0din.controller.AdminController">
+	<children>
+		<VBox alignment="CENTER" maxHeight="440.0" maxWidth="580.0" spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 16;">
+			<children>
+				<Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0A47A9;" text="Panel de administración" />
+				<Label style="-fx-font-size: 13px; -fx-text-fill: #6B7280;" text="Gestión de clientes y empleados" />
+				<HBox alignment="CENTER" spacing="12.0">
+					<children>
+						<Button maxWidth="1.7976931348623157E308" onAction="#actualizarClientes" prefHeight="40.0" style="-fx-background-color: #0A47A9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Actualizar clientes" HBox.hgrow="ALWAYS" />
+						<Button maxWidth="1.7976931348623157E308" onAction="#actualizarEmpleados" prefHeight="40.0" style="-fx-background-color: #16A6AE; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Actualizar empleados" HBox.hgrow="ALWAYS" />
+					</children>
+				</HBox>
+				<ListView fx:id="listaUsuarios" onMouseClicked="#editarSeleccionado" prefHeight="230.0" prefWidth="520.0" style="-fx-background-color: #F7FAFC; -fx-background-radius: 8; -fx-border-color: #DCE5EC; -fx-border-radius: 8;" />
+				<Button onAction="#cerrarSesion" style="-fx-background-color: transparent; -fx-text-fill: #526273; -fx-font-weight: bold; -fx-cursor: hand;" text="Cerrar sesión" />
+			</children>
+			<padding>
+				<Insets bottom="20.0" left="24.0" right="24.0" top="20.0" />
+			</padding>
+			<effect>
+				<DropShadow color="#00000040" offsetY="6.0" radius="20.0" />
+			</effect>
+		</VBox>
+	</children>
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+	</padding>
 </VBox>
