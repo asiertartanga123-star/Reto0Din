@@ -27,7 +27,7 @@ public class AdminController {
     private static final String DB_URL = System.getenv().getOrDefault(
         "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
     private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
+    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "");
 
     @FXML
     private ListView<Usuario> listaUsuarios;
