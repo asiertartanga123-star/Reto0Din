@@ -20,7 +20,8 @@
 						<Button maxWidth="1.7976931348623157E308" onAction="#actualizarEmpleados" prefHeight="40.0" style="-fx-background-color: #16A6AE; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Actualizar empleados" HBox.hgrow="ALWAYS" />
 					</children>
 				</HBox>
-				<ListView fx:id="listaUsuarios" onMouseClicked="#editarSeleccionado" prefHeight="230.0" prefWidth="520.0" style="-fx-background-color: #F7FAFC; -fx-background-radius: 8; -fx-border-color: #DCE5EC; -fx-border-radius: 8;" />
+				<ListView fx:id="listaUsuarios" prefHeight="230.0" prefWidth="520.0" style="-fx-background-color: #F7FAFC; -fx-background-radius: 8; -fx-border-color: #DCE5EC; -fx-border-radius: 8;" />
+				<Button onAction="#editarSeleccionado" style="-fx-background-color: #16A6AE; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Editar datos" />
 				<Button onAction="#cerrarSesion" style="-fx-background-color: transparent; -fx-text-fill: #526273; -fx-font-weight: bold; -fx-cursor: hand;" text="Cerrar sesión" />
 			</children>
 			<padding>

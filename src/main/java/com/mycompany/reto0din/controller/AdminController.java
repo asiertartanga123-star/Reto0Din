@@ -8,19 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Optional;
-import javafx.geometry.Insets;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TextInputDialog;
 
 public class AdminController {
 
@@ -70,54 +61,40 @@ public class AdminController {
     }
 
     @FXML
-    private void editarSeleccionado(MouseEvent evento) {
-        Node objetivo = (Node) evento.getTarget();
-        while (objetivo != null && !(objetivo instanceof ListCell)) {
-            objetivo = objetivo.getParent();
-        }
-        if (!(objetivo instanceof ListCell)) {
-            return;
-        }
-
+    private void editarSeleccionado() {
         Usuario usuario = listaUsuarios.getSelectionModel().getSelectedItem();
         if (usuario == null) {
             return;
         }
 
-        TextField correo = new TextField(usuario.mail);
-        TextField telefono = new TextField(usuario.telefono == null ? "" : usuario.telefono);
-        Dialog<ButtonType> dialogo = new Dialog<>();
-        ButtonType guardar = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
-        dialogo.setTitle("Editar usuario");
-        dialogo.setHeaderText(usuario.nombre + " " + usuario.apellido + " (" + usuario.dni + ")");
-        dialogo.getDialogPane().getButtonTypes().addAll(guardar, ButtonType.CANCEL);
+        TextInputDialog dialogoCorreo = new TextInputDialog(usuario.mail);
+        dialogoCorreo.setTitle("Editar datos");
+        dialogoCorreo.setHeaderText("Introduce el correo electrónico");
+        Optional<String> correo = dialogoCorreo.showAndWait();
+        if (!correo.isPresent()) {
+            return;
+        }
 
-        GridPane campos = new GridPane();
-        campos.setHgap(10.0);
-        campos.setVgap(10.0);
-        campos.setPadding(new Insets(10.0));
-        campos.add(new Label("Correo electrónico"), 0, 0);
-        campos.add(correo, 1, 0);
-        campos.add(new Label("Teléfono"), 0, 1);
-        campos.add(telefono, 1, 1);
-        dialogo.getDialogPane().setContent(campos);
-
-        Optional<ButtonType> resultado = dialogo.showAndWait();
-        if (!resultado.isPresent() || resultado.get() != guardar) {
+        TextInputDialog dialogoTelefono = new TextInputDialog(
+            usuario.telefono == null ? "" : usuario.telefono);
+        dialogoTelefono.setTitle("Editar datos");
+        dialogoTelefono.setHeaderText("Introduce el teléfono");
+        Optional<String> telefono = dialogoTelefono.showAndWait();
+        if (!telefono.isPresent()) {
             return;
         }
 
         Integer numeroTelefono = null;
-        if (!telefono.getText().trim().isEmpty()) {
+        if (!telefono.get().trim().isEmpty()) {
             try {
-                numeroTelefono = Integer.valueOf(telefono.getText().trim());
+                numeroTelefono = Integer.valueOf(telefono.get().trim());
             } catch (NumberFormatException exception) {
                 mostrarError("El teléfono debe ser un número válido.");
                 return;
             }
         }
 
-        guardarCambios(usuario, correo.getText().trim(), numeroTelefono);
+        guardarCambios(usuario, correo.get().trim(), numeroTelefono);
     }
 
     private void guardarCambios(Usuario usuario, String correo, Integer telefono) {
