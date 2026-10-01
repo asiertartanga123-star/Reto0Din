@@ -1,10 +1,7 @@
 package com.mycompany.reto0din.controller;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.mycompany.reto0din.dao.UsuarioDAO;
 import java.sql.SQLException;
 import com.mycompany.reto0din.app.App;
 import javafx.scene.control.Alert;
@@ -15,10 +12,7 @@ import javafx.scene.control.TextField;
 
 public class IniciarSesionController {
 
-    private static final String DB_URL = System.getenv().getOrDefault(
-        "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
-    private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @FXML
     private TextField txtEmail;
@@ -38,22 +32,16 @@ public class IniciarSesionController {
             return;
         }
 
-        String sql = "SELECT tipo FROM usuario WHERE mail = ? AND contrasenia = ?";
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, email);
-            statement.setString(2, password);
-
-            try (ResultSet result = statement.executeQuery()) {
-                if (!result.next()) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Acceso denegado",
-                        "El email o la contraseña no son correctos.");
-                } else if ("ADMIN".equals(result.getString("tipo"))) {
-                    App.setRoot("admin");
-                } else {
-                    mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
-                        "Esta cuenta no tiene acceso al panel de administración.");
-                }
+        try {
+            String tipo = usuarioDAO.autenticar(email, password);
+            if (tipo == null) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Acceso denegado",
+                    "El email o la contraseña no son correctos.");
+            } else if ("ADMIN".equals(tipo)) {
+                App.setRoot("admin");
+            } else {
+                mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
+                    "Esta cuenta no tiene acceso al panel de administración.");
             }
         } catch (SQLException exception) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error de conexión",
