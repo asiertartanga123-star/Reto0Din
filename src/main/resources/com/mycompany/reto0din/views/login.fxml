@@ -8,9 +8,11 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <!-- GridPane exterior: fondo degradado y tarjeta centrada -->
+
 <GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom right, #5CE1E6, #0A47A9);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reto0din.controller.IniciarSesionController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
@@ -39,6 +41,7 @@
             <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
          </rowConstraints>
          <children>
             <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #0A47A9;" text="Bienvenido" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
@@ -58,11 +61,15 @@
             </Label>
             <PasswordField fx:id="txtPassword" promptText="••••••••" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #D1D5DB; -fx-padding: 9;" GridPane.rowIndex="5" />
 
-            <Button fx:id="btnLogin" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="40.0" style="-fx-background-color: #0A47A9; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="Iniciar sesión" GridPane.rowIndex="6">
+            <HBox spacing="10.0" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets top="14.0" />
                </GridPane.margin>
-            </Button>
+               <children>
+                  <Button fx:id="btnLogin" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="40.0" style="-fx-background-color: #0A47A9; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="Iniciar sesión" HBox.hgrow="ALWAYS" />
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#abrirRegistro" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #0A47A9; -fx-font-weight: bold; -fx-font-size: 14px; -fx-border-color: #0A47A9; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand;" text="Registrarse" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </children>

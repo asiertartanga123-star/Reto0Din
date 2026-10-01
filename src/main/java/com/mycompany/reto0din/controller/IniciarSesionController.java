@@ -61,6 +61,11 @@ public class IniciarSesionController {
         }
     }
 
+    @FXML
+    private void abrirRegistro() throws IOException {
+        App.setRoot("register");
+    }
+
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
