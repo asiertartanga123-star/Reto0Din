@@ -24,11 +24,6 @@ public class AdminController {
     private ListView<Usuario> listaUsuarios;
 
     @FXML
-    private void cerrarSesion() throws java.io.IOException {
-        App.setRoot("login");
-    }
-
-    @FXML
     private void actualizarClientes() {
         actualizarLista("CLIENTE");
     }
@@ -36,6 +31,11 @@ public class AdminController {
     @FXML
     private void actualizarEmpleados() {
         actualizarLista("EMPLEADO");
+    }
+
+    @FXML
+    private void cerrarSesion() throws java.io.IOException {
+        App.setRoot("login");
     }
 
     private void actualizarLista(String tipo) {
