@@ -50,9 +50,11 @@ public class IniciarSesionController {
                         "El email o la contraseña no son correctos.");
                 } else if ("ADMIN".equals(result.getString("tipo"))) {
                     App.setRoot("admin");
+                } else if ("CLIENTE".equals(result.getString("tipo"))) {
+                    App.setRoot("cliente");
                 } else {
                     mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
-                        "Esta cuenta no tiene acceso al panel de administración.");
+                        "Esta cuenta no tiene acceso habilitado.");
                 }
             }
         } catch (SQLException exception) {
