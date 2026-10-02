@@ -18,7 +18,7 @@
          </effect>
          <children>
             <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #0A47A9;" text="Área de cliente" />
-            <Label style="-fx-font-size: 14px; -fx-text-fill: #6B7280;" text="Bienvenido a tu espacio personal" />
+            <Label fx:id="lblBienvenida" style="-fx-font-size: 14px; -fx-text-fill: #6B7280;" text="Bienvenido a tu espacio personal" />
             <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: #EAF8F8; -fx-background-radius: 8;">
                <padding>
                   <Insets bottom="14.0" left="16.0" right="16.0" top="14.0" />

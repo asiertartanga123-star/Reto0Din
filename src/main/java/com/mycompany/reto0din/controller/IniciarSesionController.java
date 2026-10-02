@@ -38,7 +38,7 @@ public class IniciarSesionController {
             return;
         }
 
-        String sql = "SELECT tipo FROM usuario WHERE mail = ? AND contrasenia = ?";
+        String sql = "SELECT tipo, nombre FROM usuario WHERE mail = ? AND contrasenia = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
@@ -51,6 +51,7 @@ public class IniciarSesionController {
                 } else if ("ADMIN".equals(result.getString("tipo"))) {
                     App.setRoot("admin");
                 } else if ("CLIENTE".equals(result.getString("tipo"))) {
+                    ClienteController.nombreCliente = result.getString("nombre");
                     App.setRoot("cliente");
                 } else {
                     mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
