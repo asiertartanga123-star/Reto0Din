@@ -9,75 +9,68 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 
 public class ClienteController {
 
-    private static final String DB_URL = System.getenv().getOrDefault(
-        "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
-    private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
+    private static final String URL = "jdbc:mysql://localhost:3306/tolodb";
+    private static final String USER = "root";
+    private static final String PASSWORD = "abcd*1234";
 
+    // Se rellena desde el login
     public static String emailCliente;
-
-    private String dniCliente;
-    private TextField txtMail;
-    private TextField txtTlf;
 
     @FXML
     private Label lblBienvenida;
     @FXML
-    private GridPane datos;
+    private Label lblDni;
+    @FXML
+    private Label lblNombre;
+    @FXML
+    private Label lblApellido;
+    @FXML
+    private Label lblPais;
+    @FXML
+    private TextField txtMail;
+    @FXML
+    private TextField txtTlf;
 
     @FXML
     private void initialize() {
         String sql = "SELECT dni, nombre, apellido, mail, pais, tlf FROM usuario WHERE mail = ?";
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, emailCliente);
 
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
-                    dniCliente = result.getString("dni");
-                    lblBienvenida.setText("Te damos la bienvenida, " + result.getString("nombre") + "!");
+        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-                    datos.getChildren().clear();
+            ps.setString(1, emailCliente);
+            ResultSet rs = ps.executeQuery();
 
-                    // Solo lectura
-                    anadirFila(0, "DNI", dniCliente);
-                    anadirFila(1, "Nombre", result.getString("nombre"));
-                    anadirFila(2, "Apellido", result.getString("apellido"));
-                    anadirFila(3, "País", result.getString("pais"));
-
-                    // Editables
-                    txtMail = new TextField(result.getString("mail"));
-                    txtTlf = new TextField(String.valueOf(result.getInt("tlf")));
-                    anadirCampo(4, "Correo", txtMail);
-                    anadirCampo(5, "Teléfono", txtTlf);
-
-                    Button btnGuardar = new Button("Guardar cambios");
-                    btnGuardar.setOnAction(e -> guardarCambios());
-                    datos.add(btnGuardar, 1, 6);
-                } else {
-                    lblBienvenida.setText("No se encontró el usuario: " + emailCliente);
-                }
+            if (rs.next()) {
+                lblBienvenida.setText("Te damos la bienvenida, " + rs.getString("nombre") + "!");
+                lblDni.setText(rs.getString("dni"));
+                lblNombre.setText(rs.getString("nombre"));
+                lblApellido.setText(rs.getString("apellido"));
+                lblPais.setText(rs.getString("pais"));
+                txtMail.setText(rs.getString("mail"));
+                txtTlf.setText(String.valueOf(rs.getInt("tlf")));
+            } else {
+                lblBienvenida.setText("No se encontró el usuario");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            lblBienvenida.setText("Error al cargar los datos.");
+            lblBienvenida.setText("Error al cargar los datos");
         }
     }
 
+    @FXML
     private void guardarCambios() {
         String nuevoMail = txtMail.getText().trim();
         String textoTlf = txtTlf.getText().trim();
 
         if (nuevoMail.isEmpty() || textoTlf.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Campos incompletos",
-                "Rellena el correo y el teléfono.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Rellena el correo y el teléfono.");
             return;
         }
 
@@ -85,52 +78,39 @@ public class ClienteController {
         try {
             nuevoTlf = Integer.parseInt(textoTlf);
         } catch (NumberFormatException e) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Teléfono no válido",
-                "El teléfono solo puede contener números.");
+            mostrarAlerta(Alert.AlertType.WARNING, "El teléfono solo puede contener números.");
             return;
         }
 
         String sql = "UPDATE usuario SET mail = ?, tlf = ? WHERE dni = ?";
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, nuevoMail);
-            statement.setInt(2, nuevoTlf);
-            statement.setString(3, dniCliente);
-            statement.executeUpdate();
+
+        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoMail);
+            ps.setInt(2, nuevoTlf);
+            ps.setString(3, lblDni.getText());
+            ps.executeUpdate();
 
             emailCliente = nuevoMail;
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Correcto", "Datos actualizados.");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Datos actualizados.");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los cambios.");
+            mostrarAlerta(Alert.AlertType.ERROR, "No se pudieron guardar los cambios.");
         }
-    }
-
-    private void anadirFila(int fila, String etiqueta, String valor) {
-        Label lblEtiqueta = new Label(etiqueta + ":");
-        lblEtiqueta.setStyle("-fx-font-weight: bold;");
-        datos.add(lblEtiqueta, 0, fila);
-        datos.add(new Label(valor), 1, fila);
-    }
-
-    private void anadirCampo(int fila, String etiqueta, TextField campo) {
-        Label lblEtiqueta = new Label(etiqueta + ":");
-        lblEtiqueta.setStyle("-fx-font-weight: bold;");
-        datos.add(lblEtiqueta, 0, fila);
-        datos.add(campo, 1, fila);
-    }
-
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
     }
 
     @FXML
     private void cerrarSesion() throws IOException {
         emailCliente = null;
         App.setRoot("login");
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String mensaje) {
+        Alert alerta = new Alert(tipo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 }
