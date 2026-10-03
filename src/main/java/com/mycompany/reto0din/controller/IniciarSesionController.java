@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
 
 public class IniciarSesionController {
 
@@ -39,7 +40,9 @@ public class IniciarSesionController {
                     "El email o la contraseña no son correctos.");
             } else if ("ADMIN".equals(tipo)) {
                 App.setRoot("admin");
-            } else {
+            } else if("EMPLEADO".equals(tipo)){
+                App.setRoot("empleado");
+            }else {
                 mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
                     "Esta cuenta no tiene acceso al panel de administración.");
             }
