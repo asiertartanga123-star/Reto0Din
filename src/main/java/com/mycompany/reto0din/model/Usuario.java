@@ -11,6 +11,7 @@ public final class Usuario {
     private final String correo;
     private final String telefono;
     private final String tipo;
+    private final String pais;
 
     /**
      * Crea una instancia con los datos basicos de un usuario.
@@ -24,12 +25,18 @@ public final class Usuario {
      */
     public Usuario(String dni, String nombre, String apellido, String correo,
                    String telefono, String tipo) {
+        this(dni, nombre, apellido, correo, telefono, tipo, null);
+    }
+
+    public Usuario(String dni, String nombre, String apellido, String correo,
+                   String telefono, String tipo, String pais) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         this.telefono = telefono;
         this.tipo = tipo;
+        this.pais = pais;
     }
 
     /** @return DNI del usuario */
@@ -60,6 +67,11 @@ public final class Usuario {
     /** @return tipo de cuenta */
     public String getTipo() {
         return tipo;
+    }
+
+    /** @return pais del usuario, o {@code null} si no esta informado */
+    public String getPais() {
+        return pais;
     }
 
     /** @return usuario formateado para la lista de administracion */

@@ -1,22 +1,23 @@
 package com.mycompany.reto0din.controller;
 
 import com.mycompany.reto0din.app.App;
+import com.mycompany.reto0din.dao.UsuarioDAO;
+import com.mycompany.reto0din.model.Usuario;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+/**
+ * Gestiona la consulta y modificación de los datos del perfil del cliente.
+ *
+ * @author Ekain
+ */
 public class ClienteController {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/tolodb";
-    private static final String USER = "root";
-    private static final String PASSWORD = "abcd*1234";
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     // Se rellena desde el login
     public static String emailCliente;
@@ -36,34 +37,29 @@ public class ClienteController {
     @FXML
     private TextField txtTlf;
 
+    /** Carga en la pantalla los datos del cliente que inició sesión. */
     @FXML
     private void initialize() {
-        String sql = "SELECT dni, nombre, apellido, mail, pais, tlf FROM usuario WHERE mail = ?";
-
-        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, emailCliente);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                lblBienvenida.setText("Te damos la bienvenida, " + rs.getString("nombre") + "!");
-                lblDni.setText(rs.getString("dni"));
-                lblNombre.setText(rs.getString("nombre"));
-                lblApellido.setText(rs.getString("apellido"));
-                lblPais.setText(rs.getString("pais"));
-                txtMail.setText(rs.getString("mail"));
-                txtTlf.setText(String.valueOf(rs.getInt("tlf")));
+        try {
+            Usuario usuario = usuarioDAO.buscarPorCorreo(emailCliente);
+            if (usuario != null) {
+                lblBienvenida.setText("Te damos la bienvenida, " + usuario.getNombre() + "!");
+                lblDni.setText(usuario.getDni());
+                lblNombre.setText(usuario.getNombre());
+                lblApellido.setText(usuario.getApellido());
+                lblPais.setText(usuario.getPais());
+                txtMail.setText(usuario.getCorreo());
+                txtTlf.setText(usuario.getTelefono());
             } else {
                 lblBienvenida.setText("No se encontró el usuario");
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
             lblBienvenida.setText("Error al cargar los datos");
         }
     }
 
+    /** Valida y guarda los cambios del correo electrónico y el teléfono. */
     @FXML
     private void guardarCambios() {
         String nuevoMail = txtMail.getText().trim();
@@ -82,31 +78,31 @@ public class ClienteController {
             return;
         }
 
-        String sql = "UPDATE usuario SET mail = ?, tlf = ? WHERE dni = ?";
-
-        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, nuevoMail);
-            ps.setInt(2, nuevoTlf);
-            ps.setString(3, lblDni.getText());
-            ps.executeUpdate();
-
+        try {
+            usuarioDAO.actualizarDatosCliente(lblDni.getText(), nuevoMail, nuevoTlf);
             emailCliente = nuevoMail;
             mostrarAlerta(Alert.AlertType.INFORMATION, "Datos actualizados.");
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
             mostrarAlerta(Alert.AlertType.ERROR, "No se pudieron guardar los cambios.");
         }
     }
 
+    /** Cierra la sesión del cliente y vuelve al inicio de sesión.
+     *
+     * @throws IOException si no se puede cargar la pantalla de inicio de sesión
+     */
     @FXML
     private void cerrarSesion() throws IOException {
         emailCliente = null;
         App.setRoot("login");
     }
 
+    /** Muestra una alerta con el mensaje indicado.
+     *
+     * @param tipo tipo de alerta que se va a mostrar
+     * @param mensaje contenido de la alerta
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String mensaje) {
         Alert alerta = new Alert(tipo);
         alerta.setHeaderText(null);

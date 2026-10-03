@@ -2,14 +2,9 @@ package com.mycompany.reto0din.controller;
 
 
 import com.mycompany.reto0din.app.App;
+import com.mycompany.reto0din.dao.UsuarioDAO;
 import java.io.IOException;
-import javafx.fxml.FXML;   
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import com.mycompany.reto0din.app.App;
 import Exceptions.ValidarDniException;
 import Exceptions.ValidarEmailException;
 import javafx.fxml.FXML;
@@ -18,12 +13,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+/**
+ * Gestiona la validación de los datos y el registro de nuevos clientes.
+ *
+ * @author Jon Ander
+ */
 public class RegistroController {
 
-    private static final String DB_URL = System.getenv().getOrDefault(
-        "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
-    private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     // Componentes del register.fxml (el nombre tiene que ser igual que el fx:id)
     @FXML
@@ -45,13 +42,13 @@ public class RegistroController {
     @FXML
     private TextField txtTarjeta;
 
-    // Se ejecuta solo al abrir la pantalla. Rellena el desplegable de paises
+    /** Rellena el selector de países al abrir la pantalla de registro. */
     @FXML
     private void initialize() {
         cmbPais.getItems().addAll("Espana", "Mexico", "Argentina", "Chile", "Colombia");
     }
 
-    // Boton "Crear cuenta"
+    /** Valida los datos introducidos, registra el cliente y muestra el resultado. */
     @FXML
     private void registrar() throws IOException {
         // Cojo lo que ha escrito el usuario
@@ -95,23 +92,9 @@ public class RegistroController {
             return;
         }
 
-        String sql = "INSERT INTO usuario (dni, nombre, apellido, mail, contrasenia, pais, tlf, tarjeta, tipo) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'CLIENTE')";
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, dni);
-            statement.setString(2, nombre);
-            statement.setString(3, apellido);
-            statement.setString(4, email);
-            statement.setString(5, password);
-            statement.setString(6, pais);
-            statement.setInt(7, Integer.parseInt(telefono));
-            if (tarjeta.isEmpty()) {
-                statement.setString(8, null);
-            } else {
-                statement.setString(8, tarjeta);
-            }
-            statement.executeUpdate();
+        try {
+            usuarioDAO.registrarCliente(dni, nombre, apellido, email, password, pais,
+                Integer.parseInt(telefono), tarjeta.isEmpty() ? null : tarjeta);
         } catch (SQLException exception) {
             // 1062 es el codigo de MySQL para "entrada duplicada" (el DNI ya existe)
             if (exception.getErrorCode() == 1062) {
@@ -128,12 +111,20 @@ public class RegistroController {
         App.setRoot("login");
     }
 
+    /** Vuelve a la pantalla de inicio de sesión.
+     *
+     * @throws IOException si no se puede cargar la pantalla de inicio de sesión
+     */
     @FXML
     private void volverAlLogin() throws IOException {
         App.setRoot("login");
     }
 
-    //Excepciones
+    /** Comprueba el formato y la letra de control del DNI.
+     *
+     * @param dni DNI que se va a validar
+     * @throws ValidarDniException si el formato o la letra del DNI no son válidos
+     */
     private void validarDni(String dni) throws ValidarDniException {
         if (!dni.matches("^[0-9]{8}[A-Z]$")) {
             throw new ValidarDniException("El DNI debe tener 8 dígitos seguidos de una letra mayúscula.");
@@ -149,6 +140,11 @@ public class RegistroController {
         }
     }
 
+    /** Comprueba que el correo tenga un formato válido.
+     *
+     * @param email correo electrónico que se va a validar
+     * @throws ValidarEmailException si el correo no tiene un formato válido
+     */
     private void validarEmail(String email) throws ValidarEmailException {
         String PATRON_EMAIL = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$";
         if (!email.matches(PATRON_EMAIL)) {
@@ -156,6 +152,12 @@ public class RegistroController {
         }
     }
 
+    /** Muestra una alerta con el tipo, título y mensaje indicados.
+     *
+     * @param tipo tipo de alerta que se va a mostrar
+     * @param titulo título de la alerta
+     * @param mensaje contenido de la alerta
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

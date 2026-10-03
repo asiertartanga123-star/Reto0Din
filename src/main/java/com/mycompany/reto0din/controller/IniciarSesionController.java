@@ -11,16 +11,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 
+/**
+ * Gestiona el inicio de sesión y dirige al usuario a su pantalla correspondiente.
+ *
+ * @author Asier
+ */
 public class IniciarSesionController {
 
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-    private static final String DB_URL = System.getenv().getOrDefault(
-        "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
-    private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
-
 
     @FXML
     private TextField txtEmail;
@@ -29,6 +28,7 @@ public class IniciarSesionController {
     @FXML
     private Button btnLogin;
 
+    /** Valida las credenciales y abre la pantalla asignada al tipo de cuenta. */
     @FXML
     private void iniciarSesion() throws IOException {
         String email = txtEmail.getText().trim();
@@ -62,11 +62,21 @@ public class IniciarSesionController {
         }
     }
 
+    /** Abre la pantalla de registro de usuarios.
+     *
+     * @throws IOException si no se puede cargar la pantalla de registro
+     */
     @FXML
     private void abrirRegistro() throws IOException {
         App.setRoot("register");
     }
 
+    /** Muestra una alerta con el tipo, título y mensaje indicados.
+     *
+     * @param tipo tipo de alerta que se va a mostrar
+     * @param titulo título de la alerta
+     * @param mensaje contenido de la alerta
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

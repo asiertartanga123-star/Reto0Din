@@ -63,6 +63,54 @@ public final class UsuarioDAO {
         return usuarios;
     }
 
+    public void registrarCliente(String dni, String nombre, String apellido, String correo,
+                                 String contrasenia, String pais, int telefono, String tarjeta)
+            throws SQLException {
+        String sql = "INSERT INTO usuario (dni, nombre, apellido, mail, contrasenia, pais, tlf, tarjeta, tipo) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'CLIENTE')";
+        try (Connection conexion = abrirConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+            sentencia.setString(1, dni);
+            sentencia.setString(2, nombre);
+            sentencia.setString(3, apellido);
+            sentencia.setString(4, correo);
+            sentencia.setString(5, contrasenia);
+            sentencia.setString(6, pais);
+            sentencia.setInt(7, telefono);
+            sentencia.setString(8, tarjeta);
+            sentencia.executeUpdate();
+        }
+    }
+
+    public Usuario buscarPorCorreo(String correo) throws SQLException {
+        String sql = "SELECT dni, nombre, apellido, mail, pais, tlf, tipo FROM usuario WHERE mail = ?";
+        try (Connection conexion = abrirConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+            sentencia.setString(1, correo);
+            try (ResultSet resultado = sentencia.executeQuery()) {
+                if (!resultado.next()) {
+                    return null;
+                }
+                return new Usuario(
+                    resultado.getString("dni"), resultado.getString("nombre"),
+                    resultado.getString("apellido"), resultado.getString("mail"),
+                    resultado.getString("tlf"), resultado.getString("tipo"),
+                    resultado.getString("pais"));
+            }
+        }
+    }
+
+    public void actualizarDatosCliente(String dni, String correo, int telefono) throws SQLException {
+        String sql = "UPDATE usuario SET mail = ?, tlf = ? WHERE dni = ?";
+        try (Connection conexion = abrirConexion();
+             PreparedStatement sentencia = conexion.prepareStatement(sql)) {
+            sentencia.setString(1, correo);
+            sentencia.setInt(2, telefono);
+            sentencia.setString(3, dni);
+            sentencia.executeUpdate();
+        }
+    }
+
     /**
      * @return conexion a la base de datos
      * @throws SQLException si no se puede establecer la conexion
