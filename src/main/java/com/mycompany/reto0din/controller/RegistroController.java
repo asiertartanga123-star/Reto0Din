@@ -1,10 +1,9 @@
 package com.mycompany.reto0din.controller;
 
-<<<<<<< HEAD
+
 import com.mycompany.reto0din.app.App;
 import java.io.IOException;
 import javafx.fxml.FXML;   
-=======
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,14 +17,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
->>>>>>> jonan
 
 public class RegistroController {
 
     private static final String DB_URL = System.getenv().getOrDefault(
         "DB_URL", "jdbc:mysql://localhost:3306/tolodb");
     private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "");
+    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "abcd*1234");
 
     // Componentes del register.fxml (el nombre tiene que ser igual que el fx:id)
     @FXML
