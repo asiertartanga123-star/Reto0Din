@@ -40,16 +40,12 @@ public class IniciarSesionController {
                         "El email o la contraseña no son correctos.");
             } else if ("ADMIN".equals(tipo)) {
                 App.setRoot("admin");
-<<<<<<< HEAD
             } else if ("CLIENTE".equals(tipo)) {
                 ClienteController.emailCliente = email;
                 App.setRoot("cliente");
-            } else {
-=======
             } else if("EMPLEADO".equals(tipo)){
                 App.setRoot("empleado");
             }else {
->>>>>>> ricardo
                 mostrarAlerta(Alert.AlertType.WARNING, "Acceso no permitido",
                         "Esta cuenta no tiene acceso al panel de administración.");
             }
